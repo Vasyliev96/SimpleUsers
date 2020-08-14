@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Simple Users</string>
+    <string name="text_view_first_name_text">EMPTY FIRST NAME</string>
+    <string name="text_view_last_name_text">EMPTY LAST NAME</string>
+    <string name="text_view_first_name_hint">FIRST NAME</string>
+    <string name="text_view_last_name_hint">LAST NAME</string>
+    <string name="edit_text_first_name_text">First name</string>
+    <string name="edit_text_last_name_text">Last name</string>
+    <string name="edit_text_first_name_hint">First Name Here</string>
+    <string name="edit_text_last_name_hint">Last Name Here</string>
+    <string name="new_user">New User</string>
+    <string name="delete_user">Delete User</string>
+</resources>
