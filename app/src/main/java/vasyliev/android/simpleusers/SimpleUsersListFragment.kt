@@ -85,7 +85,9 @@ class SimpleUsersListFragment : Fragment() {
         }
     }
 
-    private fun updateUI(users:List<SimpleUsersData>) {
+
+
+    private fun updateUI(users: List<SimpleUsersData>) {
         adapter = SimpleUsersAdapter(users)
         userRecyclerView.adapter = adapter
     }

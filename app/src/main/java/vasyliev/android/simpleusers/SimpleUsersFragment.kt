@@ -80,12 +80,14 @@ class SimpleUsersFragment : Fragment() {
         return when (item.itemId) {
             R.id.delete_user -> {
                 userDetailViewModel.deleteUser(user)
-                activity!!.onBackPressed()
+                requireActivity().onBackPressed()
                 true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
+
 
     private fun updateUI() {
         editTextFirstName.setText(user.firstName)
