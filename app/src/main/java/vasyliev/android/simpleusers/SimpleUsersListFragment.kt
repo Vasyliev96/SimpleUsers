@@ -3,28 +3,22 @@ package vasyliev.android.simpleusers
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.list_item_user.view.*
 import java.util.*
 
 class SimpleUsersListFragment : Fragment() {
-    companion object {
-        fun newInstance(): SimpleUsersListFragment {
-            return SimpleUsersListFragment()
-        }
-    }
 
-    interface Callbacks {
-        fun onUserSelected(userId: UUID)
-    }
-
-    private var callbacks: Callbacks? = null
-    private var adapter: SimpleUsersAdapter? = SimpleUsersAdapter(emptyList())
+    private var callbackOnUserSelected: CallbackOnUserSelected? = null
+    private var simpleUsersAdapter: SimpleUsersAdapter? = SimpleUsersAdapter(emptyList())
     private lateinit var userRecyclerView: RecyclerView
     private val userViewModel: SimpleUsersViewModel by lazy {
         ViewModelProvider(this).get(SimpleUsersViewModel::class.java)
@@ -32,12 +26,7 @@ class SimpleUsersListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        callbacks = context as Callbacks?
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        callbackOnUserSelected = context as CallbackOnUserSelected?
     }
 
     override fun onCreateView(
@@ -48,7 +37,7 @@ class SimpleUsersListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_user_list, container, false)
         userRecyclerView = view.findViewById(R.id.simpleUserRecyclerView)
         userRecyclerView.layoutManager = LinearLayoutManager(context)
-        userRecyclerView.adapter = adapter
+        userRecyclerView.adapter = simpleUsersAdapter
         return view
     }
 
@@ -63,33 +52,25 @@ class SimpleUsersListFragment : Fragment() {
             })
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        fabFragmentUserList.setOnClickListener {
+            val user = SimpleUsersData()
+            callbackOnUserSelected?.onUserSelected(user.id)
+        }
+
+
+    }
+
     override fun onDetach() {
         super.onDetach()
-        callbacks = null
+        callbackOnUserSelected = null
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.new_user, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.new_user -> {
-                val user = SimpleUsersData()
-                userViewModel.addUser(user)
-                callbacks?.onUserSelected(user.id)
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
-
 
     private fun updateUI(users: List<SimpleUsersData>) {
-        adapter = SimpleUsersAdapter(users)
-        userRecyclerView.adapter = adapter
+        simpleUsersAdapter = SimpleUsersAdapter(users)
+        userRecyclerView.adapter = simpleUsersAdapter
     }
 
     private inner class SimpleUsersHolder(view: View) : RecyclerView.ViewHolder(view),
@@ -98,10 +79,12 @@ class SimpleUsersListFragment : Fragment() {
         private lateinit var user: SimpleUsersData
         val userFirstNameTV: TextView = itemView.textViewFirstName
         val userLastNameTV: TextView = itemView.textViewLastName
+        val editUserButton: Button = itemView.buttonEditUser
 
 
         init {
             itemView.setOnClickListener(this)
+            editUserButton.setOnClickListener { callbackOnUserSelected?.onUserSelected(user.id) }
         }
 
         fun bind(user: SimpleUsersData) {
@@ -110,8 +93,14 @@ class SimpleUsersListFragment : Fragment() {
             userLastNameTV.text = this.user.lastName
         }
 
-        override fun onClick(v: View?) {
-            callbacks?.onUserSelected(user.id)
+        override fun onClick(view: View) {
+            val alertDialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
+            alertDialog.setTitle("You selected ${layoutPosition + 1} user")
+            alertDialog.setMessage("${user.firstName} ${user.lastName}")
+            alertDialog.setButton(
+                AlertDialog.BUTTON_NEUTRAL, "OK"
+            ) { dialog, _ -> dialog.dismiss() }
+            alertDialog.show()
         }
     }
 
@@ -127,6 +116,16 @@ class SimpleUsersListFragment : Fragment() {
         override fun onBindViewHolder(holder: SimpleUsersHolder, position: Int) {
             val user = users[position]
             holder.bind(user)
+        }
+    }
+
+    interface CallbackOnUserSelected {
+        fun onUserSelected(userId: UUID)
+    }
+
+    companion object {
+        fun newInstance(): SimpleUsersListFragment {
+            return SimpleUsersListFragment()
         }
     }
 }

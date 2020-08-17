@@ -9,6 +9,7 @@ import java.util.concurrent.Executors
 private const val DATABASE_NAME = "simple-users-database"
 
 object SimpleUsersRepository {
+
     private lateinit var simpleUsersDB: SimpleUsersDB
     private lateinit var simpleUsersDAO: SimpleUsersDAO
     private val executor = Executors.newSingleThreadExecutor()

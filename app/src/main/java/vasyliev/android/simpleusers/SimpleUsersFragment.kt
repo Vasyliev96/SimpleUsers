@@ -1,7 +1,10 @@
 package vasyliev.android.simpleusers
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -12,18 +15,9 @@ import java.util.*
 private const val ARG_USER_ID = "user_id"
 
 class SimpleUsersFragment : Fragment() {
-    companion object {
-        fun newInstance(userId: UUID): SimpleUsersFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_USER_ID, userId)
-            }
-            return SimpleUsersFragment().apply {
-                arguments = args
-            }
-        }
-    }
 
     private lateinit var user: SimpleUsersData
+    private var isUserNew = true
     private val userDetailViewModel: SimpleUsersDetailViewModel by lazy {
         ViewModelProvider(this).get(SimpleUsersDetailViewModel::class.java)
     }
@@ -51,6 +45,7 @@ class SimpleUsersFragment : Fragment() {
             Observer { user ->
                 user?.let {
                     this.user = user
+                    isUserNew = false
                     updateUI()
                 }
             })
@@ -58,17 +53,31 @@ class SimpleUsersFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        fabFragmentUser.setOnClickListener {
+            val imm: InputMethodManager =
+                requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+            if (user.firstName != "" && user.lastName != "") {
+                if (!isUserNew) {
+                    userDetailViewModel.saveUser(user)
+                    Toast.makeText(context, "User successfully updated", Toast.LENGTH_SHORT).show()
+                } else {
+                    userDetailViewModel.addUser(user)
+                    Toast.makeText(context, "User successfully saved", Toast.LENGTH_SHORT).show()
+                }
+                requireActivity().onBackPressed()
+            } else {
+                Toast.makeText(context, "Please, fill in both fields", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         editTextFirstName.doOnTextChanged { userFragmentFirstNameText, _, _, _ ->
             user.firstName = userFragmentFirstNameText.toString()
         }
         editTextLastName.doOnTextChanged { userFragmentLastNameText, _, _, _ ->
             user.lastName = userFragmentLastNameText.toString()
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        userDetailViewModel.saveUser(user)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -79,6 +88,9 @@ class SimpleUsersFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_user -> {
+                val imm: InputMethodManager =
+                    requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(requireView().windowToken, 0)
                 userDetailViewModel.deleteUser(user)
                 requireActivity().onBackPressed()
                 true
@@ -87,10 +99,23 @@ class SimpleUsersFragment : Fragment() {
         }
     }
 
-
-
     private fun updateUI() {
         editTextFirstName.setText(user.firstName)
         editTextLastName.setText(user.lastName)
+    }
+
+    companion object {
+        fun newInstance(userId: UUID): SimpleUsersFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_USER_ID, userId)
+            }
+            return SimpleUsersFragment().apply {
+                arguments = args
+            }
+        }
+
+        fun newInstance(): SimpleUsersFragment {
+            return SimpleUsersFragment()
+        }
     }
 }

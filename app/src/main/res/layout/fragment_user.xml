@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:hint="@string/edit_text_first_name_hint"
-        android:text="@string/edit_text_first_name_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,8 +20,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:hint="@string/edit_text_last_name_hint"
-        android:text="@string/edit_text_last_name_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextFirstName" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabFragmentUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>

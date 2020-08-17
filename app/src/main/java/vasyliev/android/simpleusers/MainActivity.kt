@@ -3,18 +3,17 @@ package vasyliev.android.simpleusers
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), SimpleUsersListFragment.Callbacks,
+class MainActivity : AppCompatActivity(), SimpleUsersListFragment.CallbackOnUserSelected,
     NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -35,16 +34,6 @@ class MainActivity : AppCompatActivity(), SimpleUsersListFragment.Callbacks,
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener {
-            val alertDialog: AlertDialog = AlertDialog.Builder(this).create()
-            alertDialog.setTitle("Alert")
-            alertDialog.setMessage("Alert message to be shown")
-            alertDialog.setButton(
-                AlertDialog.BUTTON_NEUTRAL, "OK"
-            ) { dialog, _ -> dialog.dismiss() }
-            alertDialog.show()
-        }
         drawerLayout = findViewById(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
             this,
@@ -74,39 +63,59 @@ class MainActivity : AppCompatActivity(), SimpleUsersListFragment.Callbacks,
 
     override fun onUserSelected(userId: UUID) {
         val fragment = SimpleUsersFragment.newInstance(userId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .addToBackStack(null)
-            .commit()
+        replaceFragment(
+            fragment,
+            ifPopBackStack = false,
+            ifAddToBackStack = true
+        )
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.nav_home -> {
-                supportFragmentManager.popBackStack()
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, SimpleUsersListFragment.newInstance())
-                    .commit()
+                replaceFragment(
+                    SimpleUsersListFragment.newInstance(),
+                    ifPopBackStack = true,
+                    ifAddToBackStack = false
+                )
             }
             R.id.nav_about_us -> {
-                supportFragmentManager.popBackStack()
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, AboutUsFragment())
-                    .addToBackStack(null)
-                    .commit()
+                replaceFragment(
+                    AboutUsFragment(),
+                    ifPopBackStack = true,
+                    ifAddToBackStack = true
+                )
             }
             R.id.nav_slideshow -> {
-                supportFragmentManager.popBackStack()
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, WhatsNewFragment())
-                    .addToBackStack(null)
-                    .commit()
+                replaceFragment(
+                    WhatsNewFragment(),
+                    ifPopBackStack = true,
+                    ifAddToBackStack = true
+                )
             }
         }
         return true
+    }
+
+    private fun replaceFragment(
+        fragment: Fragment,
+        ifPopBackStack: Boolean,
+        ifAddToBackStack: Boolean
+    ) {//when
+        if (ifPopBackStack) {
+            supportFragmentManager.popBackStack()
+        }
+        if (ifAddToBackStack) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.nav_host_fragment, fragment)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.nav_host_fragment, fragment)
+                .commit()
+        }
     }
 }

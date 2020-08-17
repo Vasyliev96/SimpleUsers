@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_whats_new.*
 
 class WhatsNewFragment : Fragment() {
+
     private val whatsNewViewModel: WhatsNewViewModel by lazy {
         ViewModelProvider(this).get(WhatsNewViewModel::class.java)
     }

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_about_us.*
 
 class AboutUsFragment : Fragment() {
+
     private val aboutUsViewModel: AboutUsViewModel by lazy {
         ViewModelProvider(this).get(AboutUsViewModel::class.java)
     }

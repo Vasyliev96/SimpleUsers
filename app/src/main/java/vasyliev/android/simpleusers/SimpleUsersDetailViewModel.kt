@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import java.util.*
 
 class SimpleUsersDetailViewModel : ViewModel() {
+
     private val userIdLiveData = MutableLiveData<UUID>()
     var userLiveData: LiveData<SimpleUsersData?> =
         Transformations.switchMap(userIdLiveData) { userId ->
@@ -23,5 +24,9 @@ class SimpleUsersDetailViewModel : ViewModel() {
 
     fun deleteUser(user: SimpleUsersData) {
         SimpleUsersRepository.deleteUser(user)
+    }
+
+    fun addUser(user: SimpleUsersData) {
+        SimpleUsersRepository.addUser(user)
     }
 }
