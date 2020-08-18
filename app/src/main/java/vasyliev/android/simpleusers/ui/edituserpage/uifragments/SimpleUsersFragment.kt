@@ -20,7 +20,6 @@ private const val ARG_USER_ID = "user_id"
 class SimpleUsersFragment : Fragment() {
 
     private lateinit var user: SimpleUsersData
-    private var isUserNew = true
     private val userDetailViewModel: SimpleUsersDetailViewModel by lazy {
         ViewModelProvider(this).get(SimpleUsersDetailViewModel::class.java)
     }
@@ -48,7 +47,7 @@ class SimpleUsersFragment : Fragment() {
             Observer { user ->
                 user?.let {
                     this.user = user
-                    isUserNew = false
+                    userDetailViewModel.setUserNotNew()
                     updateUI()
                 }
             })
@@ -62,16 +61,28 @@ class SimpleUsersFragment : Fragment() {
                 requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(requireView().windowToken, 0)
             if (user.firstName != "" && user.lastName != "") {
-                if (!isUserNew) {
+                if (!userDetailViewModel.isUserNew()) {
                     userDetailViewModel.saveUser(user)
-                    Toast.makeText(context, resources.getString(R.string.toast_text_user_successfully_updated), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.toast_text_user_successfully_updated),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     userDetailViewModel.addUser(user)
-                    Toast.makeText(context, resources.getString(R.string.toast_text_user_successfully_saved), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.toast_text_user_successfully_saved),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 requireActivity().onBackPressed()
             } else {
-                Toast.makeText(context, resources.getString(R.string.toast_text_user_not_saved), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.toast_text_user_not_saved),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

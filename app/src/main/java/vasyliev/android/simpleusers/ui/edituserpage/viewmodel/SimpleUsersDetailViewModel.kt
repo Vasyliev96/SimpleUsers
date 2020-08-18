@@ -9,7 +9,7 @@ import vasyliev.android.simpleusers.repository.SimpleUsersRepository
 import java.util.*
 
 class SimpleUsersDetailViewModel : ViewModel() {
-
+    private var isUserNew = true
     private val userIdLiveData = MutableLiveData<UUID>()
     var userLiveData: LiveData<SimpleUsersData?> =
         Transformations.switchMap(userIdLiveData) { userId ->
@@ -30,5 +30,13 @@ class SimpleUsersDetailViewModel : ViewModel() {
 
     fun addUser(user: SimpleUsersData) {
         SimpleUsersRepository.addUser(user)
+    }
+
+    fun setUserNotNew() {
+        isUserNew = false
+    }
+
+    fun isUserNew(): Boolean {
+        return isUserNew
     }
 }

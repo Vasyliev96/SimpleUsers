@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), SimpleUsersListFragment.CallbackOnUser
                 }
             }
         }
+        drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
