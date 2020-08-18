@@ -1,4 +1,4 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.db
 
 import androidx.room.TypeConverter
 import java.util.*

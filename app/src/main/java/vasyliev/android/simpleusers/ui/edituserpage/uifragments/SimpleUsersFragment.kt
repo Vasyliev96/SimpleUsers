@@ -1,4 +1,4 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.ui.edituserpage.uifragments
 
 import android.app.Activity
 import android.os.Bundle
@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_user.*
+import vasyliev.android.simpleusers.R
+import vasyliev.android.simpleusers.ui.edituserpage.viewmodel.SimpleUsersDetailViewModel
+import vasyliev.android.simpleusers.db.SimpleUsersData
 import java.util.*
 
 private const val ARG_USER_ID = "user_id"
@@ -61,14 +64,14 @@ class SimpleUsersFragment : Fragment() {
             if (user.firstName != "" && user.lastName != "") {
                 if (!isUserNew) {
                     userDetailViewModel.saveUser(user)
-                    Toast.makeText(context, "User successfully updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, resources.getString(R.string.toast_text_user_successfully_updated), Toast.LENGTH_SHORT).show()
                 } else {
                     userDetailViewModel.addUser(user)
-                    Toast.makeText(context, "User successfully saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, resources.getString(R.string.toast_text_user_successfully_saved), Toast.LENGTH_SHORT).show()
                 }
                 requireActivity().onBackPressed()
             } else {
-                Toast.makeText(context, "Please, fill in both fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, resources.getString(R.string.toast_text_user_not_saved), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -109,13 +112,10 @@ class SimpleUsersFragment : Fragment() {
             val args = Bundle().apply {
                 putSerializable(ARG_USER_ID, userId)
             }
-            return SimpleUsersFragment().apply {
-                arguments = args
-            }
-        }
-
-        fun newInstance(): SimpleUsersFragment {
             return SimpleUsersFragment()
+                .apply {
+                    arguments = args
+                }
         }
     }
 }

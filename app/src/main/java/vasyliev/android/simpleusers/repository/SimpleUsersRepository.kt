@@ -1,8 +1,11 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
+import vasyliev.android.simpleusers.db.SimpleUsersDAO
+import vasyliev.android.simpleusers.db.SimpleUsersDB
+import vasyliev.android.simpleusers.db.SimpleUsersData
 import java.util.*
 import java.util.concurrent.Executors
 

@@ -1,4 +1,4 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.ui.whatsnew.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

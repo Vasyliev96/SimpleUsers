@@ -1,4 +1,4 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.ui.homepage.uifragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.list_item_user.view.*
+import vasyliev.android.simpleusers.R
+import vasyliev.android.simpleusers.ui.homepage.viewmodel.SimpleUsersViewModel
+import vasyliev.android.simpleusers.db.SimpleUsersData
 import java.util.*
 
 class SimpleUsersListFragment : Fragment() {
@@ -95,10 +98,20 @@ class SimpleUsersListFragment : Fragment() {
 
         override fun onClick(view: View) {
             val alertDialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
-            alertDialog.setTitle("You selected ${layoutPosition + 1} user")
-            alertDialog.setMessage("${user.firstName} ${user.lastName}")
+            alertDialog.setTitle(
+                String.format(
+                    resources.getString(R.string.alert_dialog_title),
+                    layoutPosition + 1
+                )
+            )
+            alertDialog.setMessage(
+                String.format(
+                    resources.getString(R.string.alert_dialog_message_form),
+                    user.firstName, user.lastName
+                )
+            )
             alertDialog.setButton(
-                AlertDialog.BUTTON_NEUTRAL, "OK"
+                AlertDialog.BUTTON_NEUTRAL, resources.getString(R.string.alert_dialog_button_text)
             ) { dialog, _ -> dialog.dismiss() }
             alertDialog.show()
         }

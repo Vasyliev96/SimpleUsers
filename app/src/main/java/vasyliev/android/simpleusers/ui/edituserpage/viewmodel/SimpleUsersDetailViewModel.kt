@@ -1,9 +1,11 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.ui.edituserpage.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import vasyliev.android.simpleusers.db.SimpleUsersData
+import vasyliev.android.simpleusers.repository.SimpleUsersRepository
 import java.util.*
 
 class SimpleUsersDetailViewModel : ViewModel() {

@@ -1,7 +1,8 @@
-package vasyliev.android.simpleusers
+package vasyliev.android.simpleusers.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import vasyliev.android.simpleusers.db.SimpleUsersData
 import java.util.*
 
 @Dao
